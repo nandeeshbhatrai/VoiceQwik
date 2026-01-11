@@ -1,0 +1,16 @@
+# ninja log v6
+31	925	7897619854062864	CMakeFiles/VoiceQwik.dir/src/utils/Logger.cpp.obj	fb49291f62528a46
+32	948	7897620398220418	CMakeFiles/VoiceQwik.dir/src/utils/Logger.cpp.obj	cf43b130c2dd56d1
+3	16	7897622154504652	clean	5345ca6175c2c29c
+36	952	7897622155239973	CMakeFiles/VoiceQwik.dir/src/utils/Logger.cpp.obj	cf43b130c2dd56d1
+4	16	7897627992269454	clean	5345ca6175c2c29c
+39	835	7897628064466956	CMakeFiles/VoiceQwik.dir/src/utils/Logger.cpp.obj	cf43b130c2dd56d1
+30	897	7897638716579620	CMakeFiles/VoiceQwik.dir/src/utils/Logger.cpp.obj	cf43b130c2dd56d1
+19	1468	7897638716479232	CMakeFiles/VoiceQwik.dir/src/networking/AudioStreamer.cpp.obj	33d374045a861b8b
+4	1482	7897638716266677	CMakeFiles/VoiceQwik.dir/src/main.cpp.obj	9932f93a92f2b744
+9	1489	7897638716266677	CMakeFiles/VoiceQwik.dir/src/audio/WasapiAudioEngine.cpp.obj	163a5db4b4209349
+29	962	7897640135236161	CMakeFiles/VoiceQwik.dir/src/gui/GuiWindow.cpp.obj	43836b860a07556c
+19	1218	7897644743496518	CMakeFiles/VoiceQwik.dir/src/gui/GuiWindow.cpp.obj	43836b860a07556c
+5	1291	7897644743359471	CMakeFiles/VoiceQwik.dir/src/main.cpp.obj	9932f93a92f2b744
+14	1324	7897644743450982	CMakeFiles/VoiceQwik.dir/src/networking/AudioStreamer.cpp.obj	33d374045a861b8b
+10	1381	7897644743405324	CMakeFiles/VoiceQwik.dir/src/networking/PeerNetwork.cpp.obj	7345e84e7b4895fe

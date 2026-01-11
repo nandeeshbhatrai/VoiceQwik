@@ -1,0 +1,46 @@
+# Build directories
+/bin/
+/build/
+/Debug/
+/Release/
+/.vs/
+
+# Visual Studio files
+*.vcxproj.user
+*.sln.DotSettings
+*.sln.DotSettings.user
+
+# Object files
+*.o
+*.obj
+*.so
+*.a
+*.lib
+
+# Executable files
+*.exe
+*.dll
+*.pdb
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Misc
+.clang-format
