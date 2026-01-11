@@ -4,6 +4,7 @@
 #include <utils/Common.h>
 #include <windows.h>
 #include <string>
+#include <mutex>
 
 class GuiWindow {
 public:
@@ -20,6 +21,7 @@ public:
     bool IsMuted() const;
     std::string GetConnectionString() const;
     std::string GetRemotePeerIP() const;
+    bool TryPopConnectRequest(std::string& remotePeer);
 
     // Setters
     void SetConnectionStatus(const std::string& status);
@@ -48,6 +50,10 @@ private:
 
     int selectedParticipants;
     bool isMuted;
+
+    std::atomic<bool> connectRequested;
+    std::string requestedPeer;
+    mutable std::mutex connectMutex;
 
     // Window procedure
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);

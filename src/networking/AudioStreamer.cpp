@@ -37,6 +37,10 @@ bool AudioStreamer::Initialize() {
         return false;
     }
 
+    // Start receiving loop on a non-blocking socket so shutdown stays responsive
+    receiving = true;
+    receiverThread = std::thread(&AudioStreamer::ReceiverThreadProc, this);
+
     LOG_INFO("Audio Streamer initialized successfully");
     return true;
 }
@@ -58,6 +62,15 @@ bool AudioStreamer::CreateAudioSocket(uint16_t port) {
     audioSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (audioSocket == INVALID_SOCKET) {
         LOG_ERROR("Failed to create audio socket");
+        return false;
+    }
+
+    // Non-blocking so the receive loop can exit promptly on shutdown
+    u_long nonBlocking = 1;
+    if (ioctlsocket(audioSocket, FIONBIO, &nonBlocking) == SOCKET_ERROR) {
+        LOG_ERROR("Failed to set audio socket to non-blocking");
+        closesocket(audioSocket);
+        audioSocket = INVALID_SOCKET;
         return false;
     }
 

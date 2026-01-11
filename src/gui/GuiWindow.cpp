@@ -27,7 +27,8 @@ GuiWindow::GuiWindow()
     : hwnd(nullptr), hInstance(nullptr), running(false),
       participantCombo(nullptr), statusText(nullptr), connectionInfoEdit(nullptr),
       remotePeerEdit(nullptr), connectButton(nullptr), muteButton(nullptr),
-      volumeSlider(nullptr), selectedParticipants(2), isMuted(false) {
+    volumeSlider(nullptr), selectedParticipants(2), isMuted(false),
+    connectRequested(false) {
 }
 
 GuiWindow::~GuiWindow() {
@@ -155,6 +156,15 @@ std::string GuiWindow::GetRemotePeerIP() const {
     WideCharToMultiByte(CP_ACP, 0, buffer, -1, narrowBuffer, sizeof(narrowBuffer), nullptr, nullptr);
 
     return std::string(narrowBuffer);
+}
+
+bool GuiWindow::TryPopConnectRequest(std::string& remotePeer) {
+    std::lock_guard<std::mutex> lock(connectMutex);
+    if (!connectRequested) return false;
+
+    remotePeer = requestedPeer;
+    connectRequested = false;
+    return true;
 }
 
 void GuiWindow::SetConnectionStatus(const std::string& status) {
@@ -320,7 +330,11 @@ LRESULT GuiWindow::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam) {
                     std::string remotePeer = GetRemotePeerIP();
                     LOG_INFO("Attempting to connect to: " + remotePeer);
                     SetConnectionStatus("Connecting to " + remotePeer + "...");
-                    // Connection logic will be handled by main application
+                    {
+                        std::lock_guard<std::mutex> lock(connectMutex);
+                        requestedPeer = remotePeer;
+                        connectRequested = true;
+                    }
                     break;
                 }
 

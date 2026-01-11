@@ -26,6 +26,13 @@ set(VOICEQWIK_SOURCES
     src/utils/Logger.cpp
 )
 
+# Resource file (for icon and version info)
+if(WIN32)
+    set(VOICEQWIK_RESOURCES
+        VoiceQwik.rc
+    )
+endif()
+
 set(VOICEQWIK_HEADERS
     include/audio/WasapiAudioEngine.h
     include/networking/PeerNetwork.h
@@ -36,7 +43,7 @@ set(VOICEQWIK_HEADERS
 )
 
 # Create executable
-add_executable(VoiceQwik ${VOICEQWIK_SOURCES} ${VOICEQWIK_HEADERS})
+add_executable(VoiceQwik ${VOICEQWIK_SOURCES} ${VOICEQWIK_HEADERS} ${VOICEQWIK_RESOURCES})
 
 # Windows libraries
 target_link_libraries(VoiceQwik

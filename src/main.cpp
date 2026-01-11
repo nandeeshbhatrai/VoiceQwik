@@ -39,6 +39,10 @@ public:
             return false;
         }
 
+        // Seed participant expectation from GUI selection (defaults to 2)
+        PeerNetwork::GetInstance().SetExpectedParticipants(
+            GuiWindow::GetInstance().GetSelectedParticipantCount());
+
         LOG_INFO("Application initialized successfully");
         return true;
     }
@@ -59,9 +63,27 @@ public:
         while (GuiWindow::GetInstance().IsRunning()) {
             GuiWindow::GetInstance().Update();
 
+            // Handle connect requests coming from the UI
+            std::string remotePeer;
+            if (GuiWindow::GetInstance().TryPopConnectRequest(remotePeer)) {
+                std::string ip;
+                uint16_t port = DEFAULT_AUDIO_PORT;
+                if (ParseHostPort(remotePeer, ip, port)) {
+                    GuiWindow::GetInstance().SetConnectionStatus("Connecting to " + ip + ":" + std::to_string(port) + "...");
+                    if (PeerNetwork::GetInstance().ConnectToPeer(ip, port)) {
+                        GuiWindow::GetInstance().SetConnectionStatus("Connected to " + ip + ":" + std::to_string(port));
+                    } else {
+                        GuiWindow::GetInstance().SetConnectionStatus("Failed to connect to " + ip + ":" + std::to_string(port));
+                    }
+                } else {
+                    GuiWindow::GetInstance().SetConnectionStatus("Invalid address. Use IP:port");
+                }
+            }
+
             // Process audio if connections are ready
             if (PeerNetwork::GetInstance().IsAllPeersConnected()) {
                 ProcessAudio();
+                GuiWindow::GetInstance().SetConnectionStatus("In call");
             }
 
             // Small sleep to reduce CPU usage
@@ -82,6 +104,29 @@ public:
     }
 
 private:
+    // Very small helper: parse "ip:port" with default port fallback
+    bool ParseHostPort(const std::string& input, std::string& ip, uint16_t& port) {
+        if (input.empty()) return false;
+
+        auto colonPos = input.find(':');
+        if (colonPos == std::string::npos) {
+            ip = input;
+        } else {
+            ip = input.substr(0, colonPos);
+            try {
+                int parsedPort = std::stoi(input.substr(colonPos + 1));
+                if (parsedPort > 0 && parsedPort < 65536) {
+                    port = static_cast<uint16_t>(parsedPort);
+                }
+            } catch (...) {
+                return false;
+            }
+        }
+
+        sockaddr_in addr{};
+        return inet_pton(AF_INET, ip.c_str(), &addr.sin_addr) == 1;
+    }
+
     void ProcessAudio() {
         // Get audio from microphone
         AudioBuffer capturedAudio;
